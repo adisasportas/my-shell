@@ -13,8 +13,6 @@
 
 
 char* getInputFromUser();
-// cp file file
-// [cp,file,file]
 /**
  * Splits a string into individual tokens based on whitespace.
  * 
@@ -39,3 +37,9 @@ char* getInputFromUser();
 char** splitArgument(char*);
 
 void getLocation();
+
+void logout(char*);
+void echo(char **);
+void cd(char **);
+void cp(char **);
+void get_dir();
