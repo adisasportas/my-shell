@@ -46,18 +46,16 @@ int main()
 //                                        using c                                    using c
 void welcome() {
     printf("\n");
-    printf("*                                                *\n");
-    printf("*    AAAAA   dd      ii    ssss    aaaa   ssss   *\n");
-    printf("*   AA   AA  d d      i   s       aa  aa s       *\n");
-    printf("*  AAAAAAAA  d  d     i    sss    aaaaaa  sss    *\n");
-    printf("*  AA   AA  d   d     i       s  aa  aa      s   *\n");
-    printf("*  AA   AA  dddd     iii  ssss   aa  aa  ssss    *\n");
-    printf("*                                                *\n");
+    printf("*******************************************************\n");
+    printf("*    AAAAA   dddd    iii   sssss    aaaa      sssss   *\n");
+    printf("*   AA   AA  d   d    i   s        aa  aa    s        *\n");
+    printf("*  AAAAAAAA  d   d    i    ssss   aaaaaaa    ssss     *\n");
+    printf("*  AA    AA  d   d    i       s   aa   aa        s    *\n");
+    printf("*  AA    AA  dddd    iii  ssss    aa   aa    ssss     *\n");
+    printf("*******************************************************\n");
     printf("\n");
     printf("Welcome to myShell\n");
-    printf("Custom Version 3.1.7\n");
-    printf("https://github.com/<user>\n");
-    printf("Enjoy your coding experience!\n");
-    printf("Remember: Code is like a box of chocolates...\n");
-    printf("-- Adi Sas\n");
+    printf("I Love Coding\n");
+    printf("In the world of coding, every line is a thread in the fabric of functionality, weaving together the tapestry of technology.\n");
+    printf("----Adi Sasportas----\n");
 }

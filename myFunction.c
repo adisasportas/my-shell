@@ -1,6 +1,48 @@
 #include "myFunction.h"
 
 
+char *strwok(char *str, const char *delim) {
+    static char *next_token = NULL;
+    if (str) next_token = str; // Initialize on first call
+    if (!next_token || *next_token == '\0') return NULL; // End of string
+
+    char *token_start = next_token; // Start of the next token
+    char *current; // Current character being checked
+
+    // Skip leading delimiters
+    for (current = next_token; *current != '\0'; current++) {
+        const char *d;
+        for (d = delim; *d != '\0'; d++) {
+            if (*current == *d) {
+                
+                token_start++;
+                break;
+            }
+        }
+        if (*d == '\0') break; // Found the start of a token
+    }  
+    if (*token_start == '\0') {
+        next_token = token_start; // Prepare for the next call to return NULL
+        return NULL;
+    }
+    next_token = token_start; // Begin searching for the end of the token
+    for (current = token_start; *current != '\0'; current++) {
+        const char *d;
+        for (d = delim; *d != '\0'; d++) {
+            if (*current == *d) {
+                // Found the end of the token
+                *current = '\0'; // Terminate the token
+                next_token = current + 1; // Set up for the next token
+                return token_start; // Return the current token
+            }
+        }
+    }
+
+    // Reached the end of the string
+    next_token = current; // No more tokens
+    return token_start; // Return the last token
+}
+
 char *getInputFromUser()
 {
     char ch;
@@ -25,10 +67,10 @@ char **splitArgument(char *str)
     char *subStr;
     int size = 2;
     int index = 0;
-    subStr = strtok(str, " ");
+    subStr = strwok(str, " ");
     char **argumnts = (char **)malloc(size * sizeof(char *));
     *(argumnts + index) = subStr;
-    while ((subStr = strtok(NULL, " ")) != NULL)
+    while ((subStr = strwok(NULL, " ")) != NULL)
     {
         size++;
         index++;
@@ -58,10 +100,15 @@ void getLocation() {
         fprintf(stderr, "Error retrieving username\n");
         return;
     }
-
+   
+    
+    
+    green() ;
     bold();
+    printf("%s@%s:", username, hostname);
+    reset();
     blue();
-    printf("%s@%s:%s", username, hostname, location);
+    printf("%s", location);
     reset();
     printf("$ ");
 }
@@ -75,7 +122,7 @@ void logout(char *input) {
 
 
 void echo(char **arg) {
-    while (*(++arg)) {
+    while (*(++arg)) {             
         printf("%s ", *arg);
     }
     puts(""); 
@@ -83,21 +130,57 @@ void echo(char **arg) {
 
 // יש לטפל במקרים בהם מקבלים נתיב המכיל רווחים, תזכרו - נתיב כזה צריך להיות מסומן בגרשיים ולכן יש לוודא זאת ואם הוא אכן כזה
 // שמכיל סוגריים אז יש לבנות מחרוזת חדשה שאותה יש לשלוח לפונקציה שמשנה נתיב לתהליך.
-void cd(char **arg)
-{
-    if (strncmp(arg[1], "\"", 1) != 0 && arg[2] != NULL)
-        puts("-myShell: cd: too many arguments");
-    else if (strncmp(arg[1], "\"", 1) == 0)
-    {
-        // input =  cd "OneDrive - Ariel University"\0
-        // [cd, "OneDrive, - , Ariel, University", NULL]
-        if (chdir(arg[1]) != 0)
-            printf("-myShell: cd: %s: No such file or directory\n", arg[1]);
-    }
-    if (chdir(arg[1]) != 0)
-        printf("-myShell: cd: %s: No such file or directory\n", arg[1]);
-}
+void cd(char **arg) {
+    char path[1024] = {0}; // Adjust size as needed
 
+    if (arg[1] == NULL) {
+        printf("-myShell: cd: missing operand\n");
+        return;
+    }
+
+    // Direct handling for "cd .."
+    if (strcmp(arg[1], "..") == 0 && arg[2] == NULL) {
+        if (chdir("..") != 0) {
+            perror("-myShell: cd: error changing to parent directory");
+        }
+        return;
+    }
+
+    // For quoted paths or paths without spaces
+    if (arg[1][0] == '\"') {
+        // Quoted path
+        strncpy(path, arg[1] + 1, sizeof(path) - 1); // Copy without the leading quote
+        size_t path_len = strlen(path);
+        if (path[path_len - 1] == '\"') {
+            path[path_len - 1] = '\0'; // Remove trailing quote
+        } else if (arg[2] != NULL) { // Handle case where path is split across arguments
+            for (int i = 2; arg[i] != NULL; i++) {
+                strcat(path, " ");
+                strncat(path, arg[i], sizeof(path) - strlen(path) - 1);
+                if (arg[i][strlen(arg[i]) - 1] == '\"') {
+                    path[strlen(path) - 1] = '\0'; // Remove trailing quote and break
+                    break;
+                }
+            }
+        }
+    } else {
+        // Non-quoted but possibly space-containing path
+        strncpy(path, arg[1], sizeof(path) - 1);
+        for (int i = 2; arg[i] != NULL; i++) {
+            if (strlen(path) + strlen(arg[i]) + 2 > sizeof(path)) {
+                printf("-myShell: cd: path is too long\n");
+                return;
+            }
+            strcat(path, " ");
+            strcat(path, arg[i]);
+        }
+    }
+
+    // Attempt to change directory
+    if (chdir(path) != 0) {
+        printf("-myShell: cd: %s: No such file or directory\n",path);
+    }
+}
 void cp(char **arguments)
 {
     char ch;
