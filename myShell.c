@@ -4,9 +4,10 @@
 int main()
 {
     
-    welcome();
+      welcome();
     while (1)
     {
+        int piping = 0;
         getLocation();
         char *input = getInputFromUser();
         if (strcmp(input, "exit") == 0 || strncmp(input, "exit ", 5) == 0)
@@ -18,11 +19,27 @@ int main()
             cd(arguments);
         else if (strcmp(input, "cp") == 0)
             cp(arguments);
+        else if (strcmp(input, "delete") == 0)
+            delete(arguments);
+            else if (strcmp(input, "mv") == 0)
+            move(arguments);
+        else if (piping)
+        {
+            arguments[piping] = NULL;
+            mypipe(arguments, arguments + piping + 1);
+            wait(NULL);
+        }
+        else
+        {
+            systemCall(arguments);
+            wait(NULL);
+        }
         free(arguments);
         free(input);
 
     }
-    return 1;
+
+  return 1;
 }
 
 // יש לכתוב את פונקציית הברוכים הבאים כרצונכם אבל קצת יותר ממה שמוצג מטה לדוגמא:

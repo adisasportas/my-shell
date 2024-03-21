@@ -18,4 +18,4 @@ myFunction.o:myFunction.c myFunction.h
 	$(CC) $(FLAGS) -c myFunction.c
 
 clean:
-	rm -f *.o *.out myShell 
+	rm -f *.o *.out myShell
