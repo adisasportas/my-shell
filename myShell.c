@@ -7,7 +7,7 @@ int main()
     while (1)
     {
 
-        int piping = 0;
+        int piping = 1;
         int pipeIndex;
         getLocation();
         char *input = getInputFromUser();
@@ -55,12 +55,6 @@ int main()
         }
         else if (strcmp(input, "mv") == 0)
             move(arguments);
-        else if (piping)
-        {
-            arguments[piping] = NULL;
-            mypipe(arguments, arguments + piping + 1);
-            wait(NULL);
-        }
         else
         {
             systemCall(arguments);
