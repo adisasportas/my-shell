@@ -3,8 +3,7 @@
 
 int main()
 {
-    
-      welcome();
+    welcome();
     while (1)
     {
         int piping = 0;
@@ -13,15 +12,36 @@ int main()
         if (strcmp(input, "exit") == 0 || strncmp(input, "exit ", 5) == 0)
             logout(input);
         char **arguments = splitArgument(input);
-        if (strcmp(input, "echo") == 0)
+        int foundTwoRedirect = 0;
+        int foundOneRedirect = 0;
+        for (int i = 0; arguments[i] != NULL; i++)
+        {
+            if (strcmp(arguments[i], ">>") == 0)
+            {
+                foundTwoRedirect = 1;
+                break;
+            }
+            else if (strcmp(arguments[i], ">") == 0)
+            {
+                foundOneRedirect = 1;
+                break;
+            }
+        }
+        if (foundTwoRedirect)
+            echoppend(arguments);
+        else if (foundOneRedirect)
+            echorite(arguments);
+        else if (strcmp(input, "echo") == 0)
             echo(arguments);
+        else if (strcmp(input, "read") == 0)
+            readd(arguments);
         else if (strcmp(input, "cd") == 0)
             cd(arguments);
         else if (strcmp(input, "cp") == 0)
             cp(arguments);
         else if (strcmp(input, "delete") == 0)
-            delete(arguments);
-            else if (strcmp(input, "mv") == 0)
+            delete (arguments);
+        else if (strcmp(input, "mv") == 0)
             move(arguments);
         else if (piping)
         {
@@ -36,13 +56,10 @@ int main()
         }
         free(arguments);
         free(input);
-
     }
-
-  return 1;
+    return 1;
 }
-
-// יש לכתוב את פונקציית הברוכים הבאים כרצונכם אבל קצת יותר ממה שמוצג מטה לדוגמא:
+/*יש לכתוב את פונקציית הברוכים הבאים כרצונכם אבל קצת יותר ממה שמוצג מטה לדוגמא:
 //                     aSPY//YASa
 //              apyyyyCY//////////YCa       |
 //             sY//////YSpcs  scpCY//Pp     | Welcome to myShell
@@ -59,9 +76,9 @@ int main()
 //         sY/PsY////YCc          aC//Yp
 //          sc  sccaCY//PCypaapyCP//YSs
 //                   spCPY//////YPSps
-//                        ccaacs
-//                                        using c                                    using c
-void welcome() {
+//                        ccaacs                        using c                                    using c*/
+void welcome()
+{
     printf("\n");
     printf("*******************************************************\n");
     printf("*    AAAAA   dddd    iii   sssss    aaaa      sssss   *\n");
