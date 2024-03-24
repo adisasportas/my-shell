@@ -6,9 +6,12 @@ int main()
     welcome();
     while (1)
     {
+
         int piping = 0;
+        int pipeIndex;
         getLocation();
         char *input = getInputFromUser();
+
         if (strcmp(input, "exit") == 0 || strncmp(input, "exit ", 5) == 0)
             logout(input);
         char **arguments = splitArgument(input);
@@ -36,11 +39,20 @@ int main()
         else if (strcmp(input, "read") == 0)
             readd(arguments);
         else if (strcmp(input, "cd") == 0)
+            wordCount(arguments);
+        else if (strcmp(input, "wc") == 0)
             cd(arguments);
         else if (strcmp(input, "cp") == 0)
             cp(arguments);
         else if (strcmp(input, "delete") == 0)
             delete (arguments);
+        else if (piping)
+        {
+            char **beforePipe = splitInput(input, &pipeIndex);
+            char **afterPipe = splitAfterPipe(input, pipeIndex);
+            mypipe(beforePipe, afterPipe);
+            wait(NULL);
+        }
         else if (strcmp(input, "mv") == 0)
             move(arguments);
         else if (piping)
